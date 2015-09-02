@@ -1,0 +1,21 @@
+{
+    "name": "pact/Pact",
+    "description": "Enables consumer driven contract testing, providing a mock service and DSL for the consumer project, and interaction playback and verification for the service provider project.",
+    "license": "MIT",
+    "keywords": ["pact"],
+    "authors": [
+        {
+            "name": "Andy Kelk",
+            "email": "andy@andykelk.net"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pact\\Pact\\": "src"
+        }
+    }
+}
