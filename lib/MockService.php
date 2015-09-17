@@ -16,13 +16,13 @@ class MockService {
     if (!array_key_exists('provider', $args)) {
       throw new \InvalidArgumentException('Error creating MockService. Please provide the Pact provider name');
     }
-    $this->pactDetails = array('consumer' => array('name' => $args['consumer']), 'provider' => array('name' => $args['provider']));
+    $this->pactDetails = ['consumer' => ['name' => $args['consumer']], 'provider' => ['name' => $args['provider']]];
   }
 
   private $host = '127.0.0.1';
   private $port;
-  private $pactDetails = array();
-  private $interactions = array();
+  private $pactDetails = [];
+  private $interactions = [];
   private $baseURL;
 
   public function given($providerState) {
@@ -41,7 +41,7 @@ class MockService {
 
   private function setup() {
     $interactions = $this->interactions;
-    $this->interactions = array();
+    $this->interactions = [];
     MockServiceRequests::putInteractions($interactions, $this->baseURL);
   }
 

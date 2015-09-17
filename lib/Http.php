@@ -5,7 +5,7 @@ class Http {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     if (strtolower($method) == 'get') {
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-Pact-Mock-Service: true'));
+      curl_setopt($ch, CURLOPT_HTTPHEADER, ['X-Pact-Mock-Service: true']);
     }
     else {
       if (strtolower($method) == 'put') {
@@ -14,7 +14,7 @@ class Http {
       else if (strtolower($method) == 'post') {
         curl_setopt($ch, CURLOPT_POST, 1);
       }
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','X-Pact-Mock-Service: true'));
+      curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json','X-Pact-Mock-Service: true']);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
     }
     return curl_exec($ch);

@@ -2,7 +2,7 @@
 
 class MockServiceRequests {
   static public function putInteractions($interactions, $baseURL) {
-    $response = Http::makeRequest('PUT', $baseURL . '/interactions', json_encode(array('interactions' => $interactions)));
+    $response = Http::makeRequest('PUT', $baseURL . '/interactions', json_encode(['interactions' => $interactions]));
     if (!$response) {
       throw new \RuntimeException('Pact interaction setup failed');
     }

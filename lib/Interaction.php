@@ -3,8 +3,8 @@
 class Interaction implements \JsonSerializable {
   private $providerState;
   private $description;
-  private $request = array();
-  private $response = array();
+  private $request = [];
+  private $response = [];
 
   public function given ($state) {
     $this->providerState = $state;
@@ -63,11 +63,11 @@ class Interaction implements \JsonSerializable {
   }
 
   public function jsonSerialize() {
-    return array(
+    return [
       'description' => $this->description,
       'providerState' => $this->providerState,
       'request' => $this->request,
       'response' => $this->response
-    );
+    ];
   }
 }
