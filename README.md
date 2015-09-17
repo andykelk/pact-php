@@ -15,15 +15,39 @@ How to use
         ```
     
     3. Run bundler to get the gems: `gem install bundler && bundle install`
-2. Install composer and phpunit
-3. Write a phpunit test similar to the following:
+2. Install composer: `curl -sS https://getcomposer.org/installer | php`
+3. Install dependencies: `php composer.phar install`
+4. Write a phpunit test similar to the following:
 
     ```php
     public function testMyProvider() {
-      // Stay tuned...
+      $client = new ZooClient('http://localhost:1234');
+
+      $alligatorProvider = Pact::mockService([
+        'consumer' => 'Alligator Consumer',
+        'provider' => 'Alligator Provider',
+        'port' => 1234
+      ]);
+
+      $alligatorProvider
+        ->given("an alligator with the name Mary exists")
+        ->uponReceiving("a request for an alligator")
+        ->withRequest("get", "/alligators/Mary", [
+          "Accept" => "application/json"
+        ])->willRespondWith(200, [
+          "Content-Type" => "application/json"
+        ], [
+          "name" => "Mary"
+        ]);
+
+      $alligatorProvider->run(function() use ($client) {
+        $alligator = $client->getAlligatorByName('Mary');
+        $this->assertInstanceOf("Alligator", $alligator);
+        $this->assertEquals("Mary", $alligator->getName());
+      });
     }
     ```
 
-4. Start the mock server: `bundle exec pact-mock-service -p 1234 --pact-specification-version 2.0.0 -l log/pact.logs --pact-dir tmp/pacts`
-5. Run phpunit: `./vendor/bin/phpunit`
-6. Inspect the pact file in `tmp/pacts`
+5. Start the mock server: `bundle exec pact-mock-service -p 1234 --pact-specification-version 2.0.0 -l log/pact.logs --pact-dir tmp/pacts`
+6. Run phpunit: `./vendor/bin/phpunit`
+7. Inspect the pact file in `tmp/pacts`
