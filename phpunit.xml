@@ -10,7 +10,7 @@
          stopOnFailure="false"
          syntaxCheck="false">
     <testsuites>
-        <testsuite name="Nacho Test Suite">
+        <testsuite name="Pact Test Suite">
             <directory suffix=".php">./tests/</directory>
         </testsuite>
     </testsuites>
