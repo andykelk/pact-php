@@ -8,10 +8,10 @@ How to use
 1. Install pact mock service:
     1. Install Ruby and Ruby Gems
     2. Write a Gemfile:
-```ruby
-source 'https://rubygems.org'
-gem 'pact-mock_service', '~> 0.7.0'
-```
+    ```ruby
+    source 'https://rubygems.org'
+    gem 'pact-mock_service', '~> 0.7.0'
+    ```
     3. Run bundler to get the gems: `gem install bundler && bundle install`
 2. Install composer and phpunit
 3. Write a phpunit test similar to the following:
