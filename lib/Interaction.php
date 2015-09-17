@@ -16,13 +16,23 @@ class Interaction implements \JsonSerializable {
     return $this;
   }
 
-  public function withRequest ($firstParameter, $path, $headers = null, $body = null) {
+  public function withRequest ($firstParameter, $path = null, $headers = null, $body = null) {
     if (is_array($firstParameter)) {
-      $this->request['method'] = strtolower($firstParameter['method']);
-      $this->request['path'] = $firstParameter['path'];
-      $this->request['query'] = $firstParameter['query'];
-      $this->request['headers'] = $firstParameter['headers'];
-      $this->request['body'] = $firstParameter['body'];
+      if (array_key_exists('method', $firstParameter)) {
+        $this->request['method'] =  strtolower($firstParameter['method']);
+      }
+      if (array_key_exists('path', $firstParameter)) {
+        $this->request['path'] = $firstParameter['path'];
+      }
+      if (array_key_exists('query', $firstParameter)) {
+        $this->request['query'] = $firstParameter['query'];
+      }
+      if (array_key_exists('headers', $firstParameter)) {
+        $this->request['headers'] = $firstParameter['headers'];
+      }
+      if (array_key_exists('body', $firstParameter)) {
+        $this->request['body'] = $firstParameter['body'];
+      }
     }
     else {
       $this->request['method'] = strtolower($firstParameter);
@@ -34,7 +44,7 @@ class Interaction implements \JsonSerializable {
         $this->request['body'] = $body;
       }
     }
-    if (!$this->request['method'] || !$this->request['path']) {
+    if (!array_key_exists('method', $this->request) || !array_key_exists('path', $this->request) || !$this->request['method'] || !$this->request['path']) {
       throw new \InvalidArgumentException('withRequest requires a "method" and "path" parameter');
     }
     return $this;
@@ -42,21 +52,27 @@ class Interaction implements \JsonSerializable {
 
   public function willRespondWith ($firstParameter, $headers = null, $body = null) {
     if (is_array($firstParameter)) {
-      $this->response['status'] = $firstParameter['status'];
-      if (!is_null($headers)) {
+      if (array_key_exists('status', $firstParameter)) {
+        $this->response['status'] = $firstParameter['status'];
+      }
+      if (array_key_exists('headers', $firstParameter)) {
         $this->response['headers'] = $firstParameter['headers'];
       }
-      if (!is_null($body)) {
+      if (array_key_exists('body', $firstParameter)) {
         $this->response['body'] = $firstParameter['body'];
       }
     }
     else {
       $this->response['status'] = $firstParameter;
-      $this->response['headers'] = $headers;
-      $this->response['body'] = $body;
+      if (!is_null($headers)) {
+        $this->response['headers'] = $headers;
+      }
+      if (!is_null($body)) {
+        $this->response['body'] = $body;
+      }
     }
 
-    if (!$this->response['status']) {
+    if (!array_key_exists('status', $this->response) || !$this->response['status']) {
       throw new \InvalidArgumentException('willRespondWith requires a "status" parameter');
     }
     return $this;
