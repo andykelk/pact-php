@@ -17,6 +17,9 @@ class MockService {
       throw new \InvalidArgumentException('Error creating MockService. Please provide the Pact provider name');
     }
     $this->pactDetails = ['consumer' => ['name' => $args['consumer']], 'provider' => ['name' => $args['provider']]];
+    if (array_key_exists('pactfile_write_mode', $args) && ($args['pactfile_write_mode'] == 'update' || $args['pactfile_write_mode'] == 'overwrite')) {
+      $this->pactDetails['pactfile_write_mode'] = $args['pactfile_write_mode'];
+    }
   }
 
   private $host = '127.0.0.1';
