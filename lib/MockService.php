@@ -42,7 +42,8 @@ class MockService {
   private function setup() {
     $interactions = $this->interactions;
     $this->interactions = [];
-    MockServiceRequests::putInteractions($interactions, $this->baseURL);
+    $mockServiceRequests = new MockServiceRequests();
+    $mockServiceRequests->putInteractions($interactions, $this->baseURL);
   }
 
   private function verifyAndWrite() {
@@ -51,11 +52,13 @@ class MockService {
   }
 
   private function verify() {
-    MockServiceRequests::getVerification($this->baseURL);
+    $mockServiceRequests = new MockServiceRequests();
+    $mockServiceRequests->getVerification($this->baseURL);
   }
 
   private function write() {
-    MockServiceRequests::postPact($this->pactDetails, $this->baseURL);
+    $mockServiceRequests = new MockServiceRequests();
+    $mockServiceRequests->postPact($this->pactDetails, $this->baseURL);
   }
 
   public function run($testMethod) {
