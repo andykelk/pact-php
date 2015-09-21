@@ -1,22 +1,41 @@
 <?php namespace Pact;
 
-class Http {
-  static public function makeRequest($method, $url, $body = null) {
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+interface HttpRequest {
+  public function setMethod($method);
+  public function setBody($body);
+  public function execute();
+}
+
+class Http implements HttpRequest {
+  private $method;
+  private $body;
+  private $curlHandle;
+
+  function __construct($url) {
+    $this->curlHandle = curl_init($url);
+    curl_setopt($this->curlHandle, CURLOPT_RETURNTRANSFER, true);
+  }
+
+  public function setMethod ($method) {
     if (strtolower($method) == 'get') {
-      curl_setopt($ch, CURLOPT_HTTPHEADER, ['X-Pact-Mock-Service: true']);
+      curl_setopt($this->curlHandle, CURLOPT_HTTPHEADER, ['X-Pact-Mock-Service: true']);
     }
     else {
       if (strtolower($method) == 'put') {
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($this->curlHandle, CURLOPT_CUSTOMREQUEST, 'PUT');
       }
       else if (strtolower($method) == 'post') {
-        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($this->curlHandle, CURLOPT_POST, 1);
       }
-      curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json','X-Pact-Mock-Service: true']);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+      curl_setopt($this->curlHandle, CURLOPT_HTTPHEADER, ['Content-Type: application/json','X-Pact-Mock-Service: true']);
     }
-    return curl_exec($ch);
+  }
+
+  public function setBody ($body) {
+      curl_setopt($this->curlHandle, CURLOPT_POSTFIELDS, $body);
+  }
+
+  public function execute () {
+    return curl_exec($this->curlHandle);
   }
 }
