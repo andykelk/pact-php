@@ -2,7 +2,7 @@
 
 class MockServiceRequests {
   static public function putInteractions($interactions, $baseURL) {
-    $http = new Http($baseURL . '/interactions');
+    $http = new HttpClient($baseURL . '/interactions');
     $http->setMethod('PUT');
     $http->setBody(json_encode(['interactions' => $interactions]));
     $response = $http->execute();
@@ -12,7 +12,7 @@ class MockServiceRequests {
   }
 
   static public function getVerification($baseURL) {
-    $http = new Http($baseURL . '/interactions/verification');
+    $http = new HttpClient($baseURL . '/interactions/verification');
     $http->setMethod('GET');
     $response = $http->execute();
     if (!$response) {
@@ -21,7 +21,7 @@ class MockServiceRequests {
   }
 
   static public function postPact($pactDetails, $baseURL) {
-    $http = new Http($baseURL . '/pact');
+    $http = new HttpClient($baseURL . '/pact');
     $http->setMethod('POST');
     $http->setBody(json_encode($pactDetails));
     $response = $http->execute();

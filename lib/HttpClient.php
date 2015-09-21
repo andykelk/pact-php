@@ -6,7 +6,7 @@ interface HttpRequest {
   public function execute();
 }
 
-class Http implements HttpRequest {
+class HttpClient implements HttpRequest {
   private $method;
   private $body;
   private $curlHandle;
