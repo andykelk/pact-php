@@ -2,6 +2,8 @@
 
 Define a pact between service consumers and providers, enabling "consumer driven contract" testing.
 
+[![Build Status](https://travis-ci.org/mopoke/pact-php.svg?branch=master)](https://travis-ci.org/mopoke/pact-php)
+
 How to use
 ----------
 
