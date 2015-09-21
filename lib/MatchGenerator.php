@@ -1,7 +1,7 @@
 <?php namespace Pact;
 
-class Match {
-  public static function term ($term) {
+class MatchGenerator {
+  public function term ($term) {
     if (!$term || !is_array($term) || !array_key_exists('generate', $term) || !array_key_exists('matcher', $term)) {
       throw new \InvalidArgumentException('Error creating a Pact Term. Please provide an object containing \'generate\' and \'matcher\' properties');
     }
@@ -18,7 +18,7 @@ class Match {
     ];
   }
 
-  public static function eachLike ($content, $options = null) {
+  public function eachLike ($content, $options = null) {
     if (!$content) {
       throw new \InvalidArgumentException('Error creating a Pact eachLike. Please provide a content argument');
     }
@@ -32,7 +32,7 @@ class Match {
     ];
   }
 
-  public static function somethingLike ($value) {
+  public function somethingLike ($value) {
     if (!$value) {
       throw new \InvalidArgumentException('Error creating a Pact somethingLike Match. Value must be defined');
     }
