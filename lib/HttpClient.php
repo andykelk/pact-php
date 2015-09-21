@@ -11,14 +11,9 @@ class HttpClient implements HttpRequest {
   private $body;
   private $curlHandle;
   private $options = [];
-  private $url;
 
-  function __construct($url) {
-    if (!array_key_exists('url', get_defined_vars()) || !$url) {
-      throw new \InvalidArgumentException('Error creating Http object. Please provide a URL');
-    }
-    $this->url = $url;
-    $this->curlHandle = curl_init($url);
+  function __construct() {
+    $this->curlHandle = curl_init();
     $this->setOption(CURLOPT_RETURNTRANSFER, true);
   }
 
@@ -27,8 +22,13 @@ class HttpClient implements HttpRequest {
     $this->options[$name] = $value;
   }
 
+  public function setUrl ($url) {
+    $this->setOption(CURLOPT_URL, $url);
+  }
+
   public function setMethod ($method) {
     if (strtolower($method) == 'get') {
+      $this->setOption(CURLOPT_HTTPGET, 1);
       $this->setOption(CURLOPT_HTTPHEADER, ['X-Pact-Mock-Service: true']);
     }
     else {
@@ -52,9 +52,5 @@ class HttpClient implements HttpRequest {
   
   public function getOption ($name) {
     return $this->options[$name];
-  }
-
-  public function getUrl () {
-    return $this->url;
   }
 }
