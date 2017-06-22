@@ -20,6 +20,10 @@ class MockService {
     if (array_key_exists('pactfile_write_mode', $args) && ($args['pactfile_write_mode'] == 'update' || $args['pactfile_write_mode'] == 'overwrite')) {
       $this->pactDetails['pactfile_write_mode'] = $args['pactfile_write_mode'];
     }
+
+    if (array_key_exists('local_pact_location', $args)) {
+        $this->localPactLocation = $args['local_pact_location'];
+    }
   }
 
   private $host = '127.0.0.1';
@@ -27,6 +31,8 @@ class MockService {
   private $pactDetails = [];
   private $interactions = [];
   private $baseURL;
+  private $currentPact;
+  private $localPactLocation;
 
   public function given($providerState) {
     $interaction = new Interaction();
@@ -44,14 +50,9 @@ class MockService {
 
   private function setup() {
     $interactions = $this->interactions;
-    $this->interactions = [];
+    $this->interactions = array();
     $mockServiceRequests = new MockServiceRequests();
     $mockServiceRequests->putInteractions($interactions, $this->baseURL);
-  }
-
-  private function verifyAndWrite() {
-    $this->verify();
-    $this->write();
   }
 
   private function verify() {
@@ -61,8 +62,15 @@ class MockService {
 
   private function write() {
     $mockServiceRequests = new MockServiceRequests();
-    $mockServiceRequests->postPact($this->pactDetails, $this->baseURL);
+    return $mockServiceRequests->postPact($this->pactDetails, $this->baseURL);
   }
+
+  public function clear() {
+      $this->interactions = array();
+      $mockServiceRequests = new MockServiceRequests();
+      $mockServiceRequests->clearInteractions($this->baseURL);
+  }
+
 
   public function run($testMethod) {
     if (!is_callable($testMethod)) {
@@ -70,7 +78,26 @@ class MockService {
     }
     $this->setup();
     $testMethod();
-    $this->verifyAndWrite();
-  } 
+    $this->verify();
+    $this->currentPact = $this->write();
+
+    return $this->currentPact;
+  }
+
+  public function flushLocalPact() {
+      if (!$this->currentPact) {
+          throw new \RuntimeException('No pacts produced.  Nothing to write.');
+      }
+
+      $pact = json_decode($this->currentPact);
+
+      if ($pact == null) {
+          throw new \RuntimeException('Invalid pacts produced.  Cannot to write.');
+      }
+      $fileName = $this->localPactLocation . '/' . strtolower($pact->consumer->name) . '-' . strtolower($pact->provider->name) . '.json';
+      $result = file_put_contents($fileName, $this->currentPact);
+
+      return $result;
+  }
 
 }
