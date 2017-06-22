@@ -6,11 +6,23 @@ class MockServiceRequests {
   function __construct($httpClient = null) {
     $this->httpClient = is_null($httpClient) ? new HttpClient() : $httpClient;
   }
-  
+
+  public function clearInteractions($baseURL) {
+      $this->httpClient->setUrl($baseURL . '/interactions');
+      $this->httpClient->setMethod('DELETE');
+
+      $response = $this->httpClient->execute();
+      if (!$response) {
+          throw new \RuntimeException('Pact interaction clear failed');
+      }
+  }
+
   public function putInteractions($interactions, $baseURL) {
+
     $this->httpClient->setUrl($baseURL . '/interactions');
     $this->httpClient->setMethod('PUT');
     $this->httpClient->setBody(json_encode(['interactions' => $interactions]));
+
     $response = $this->httpClient->execute();
     if (!$response) {
       throw new \RuntimeException('Pact interaction setup failed');
@@ -30,9 +42,12 @@ class MockServiceRequests {
     $this->httpClient->setUrl($baseURL . '/pact');
     $this->httpClient->setMethod('POST');
     $this->httpClient->setBody(json_encode($pactDetails));
+
     $response = $this->httpClient->execute();
     if (!$response) {
       throw new \RuntimeException('Could not write the pact file');
     }
+
+    return $response;
   } 
 }

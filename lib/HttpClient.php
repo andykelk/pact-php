@@ -38,6 +38,9 @@ class HttpClient implements HttpRequest {
       else if (strtolower($method) == 'post') {
         $this->setOption(CURLOPT_POST, 1);
       }
+      else if (strtolower($method) == 'delete') {
+          $this->setOption( CURLOPT_CUSTOMREQUEST, 'DELETE');
+      }
       $this->setOption(CURLOPT_HTTPHEADER, ['Content-Type: application/json','X-Pact-Mock-Service: true']);
     }
   }
@@ -53,4 +56,5 @@ class HttpClient implements HttpRequest {
   public function getOption ($name) {
     return $this->options[$name];
   }
+
 }
