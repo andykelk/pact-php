@@ -2,7 +2,7 @@
 
 Define a pact between service consumers and providers, enabling "consumer driven contract" testing.
 
-[![Build Status](https://travis-ci.org/mopoke/pact-php.svg?branch=master)](https://travis-ci.org/mopoke/pact-php)
+[![CI](https://github.com/andykelk/pact-php/actions/workflows/ci.yml/badge.svg)](https://github.com/andykelk/pact-php/actions/workflows/ci.yml)
 
 How to use
 ----------
@@ -17,36 +17,42 @@ How to use
         ```
     
     3. Run bundler to get the gems: `gem install bundler && bundle install`
-2. Install composer: `curl -sS https://getcomposer.org/installer | php`
-3. Install dependencies: `php composer.phar install`
+2. Install composer: https://getcomposer.org/download/
+3. Install dependencies: `composer install`
 4. Write a phpunit test similar to the following:
 
     ```php
-    public function testMyProvider() {
-      $client = new ZooClient('http://localhost:1234');
+    use Pact\Pact;
 
-      $alligatorProvider = Pact::mockService([
-        'consumer' => 'Alligator Consumer',
-        'provider' => 'Alligator Provider',
-        'port' => 1234
-      ]);
+    class MyProviderTest extends PHPUnit\Framework\TestCase
+    {
+        public function testMyProvider(): void
+        {
+            $client = new ZooClient('http://localhost:1234');
 
-      $alligatorProvider
-        ->given("an alligator with the name Mary exists")
-        ->uponReceiving("a request for an alligator")
-        ->withRequest("get", "/alligators/Mary", [
-          "Accept" => "application/json"
-        ])->willRespondWith(200, [
-          "Content-Type" => "application/json"
-        ], [
-          "name" => "Mary"
-        ]);
+            $alligatorProvider = Pact::mockService([
+                'consumer' => 'Alligator Consumer',
+                'provider' => 'Alligator Provider',
+                'port' => 1234
+            ]);
 
-      $alligatorProvider->run(function() use ($client) {
-        $alligator = $client->getAlligatorByName('Mary');
-        $this->assertInstanceOf("Alligator", $alligator);
-        $this->assertEquals("Mary", $alligator->getName());
-      });
+            $alligatorProvider
+                ->given("an alligator with the name Mary exists")
+                ->uponReceiving("a request for an alligator")
+                ->withRequest("get", "/alligators/Mary", [
+                    "Accept" => "application/json"
+                ])->willRespondWith(200, [
+                    "Content-Type" => "application/json"
+                ], [
+                    "name" => "Mary"
+                ]);
+
+            $alligatorProvider->run(function () use ($client) {
+                $alligator = $client->getAlligatorByName('Mary');
+                $this->assertInstanceOf("Alligator", $alligator);
+                $this->assertEquals("Mary", $alligator->getName());
+            });
+        }
     }
     ```
 
