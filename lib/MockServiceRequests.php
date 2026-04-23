@@ -3,7 +3,7 @@
 class MockServiceRequests {
   private $httpClient;
 
-  function __construct($httpClient = null) {
+  public function __construct($httpClient = null) {
     $this->httpClient = is_null($httpClient) ? new HttpClient() : $httpClient;
   }
 

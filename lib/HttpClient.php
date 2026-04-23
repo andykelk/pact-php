@@ -12,7 +12,7 @@ class HttpClient implements HttpRequest {
   private $curlHandle;
   private $options = [];
 
-  function __construct() {
+  public function __construct() {
     $this->curlHandle = curl_init();
     $this->setOption(CURLOPT_RETURNTRANSFER, true);
   }

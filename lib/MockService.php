@@ -2,7 +2,7 @@
 
 class MockService {
 
-  function __construct($args) {
+  public function __construct($args) {
     if (!array_key_exists('port', $args) || !$args['port']) {
       throw new \InvalidArgumentException('Error creating MockService. Please provide the Pact mock service port');
     }
